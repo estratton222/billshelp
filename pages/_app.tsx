@@ -1,7 +1,30 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import "@fontsource/raleway/400.css";
+import "@fontsource/open-sans/700.css";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+import type { AppProps } from "next/app";
+import { ClerkProvider } from "@clerk/clerk-react";
+import { useRouter } from "next/router";
+import { defaultTheme } from "../client/theme";
+import { MainLayout } from "../client/components/layouts";
+import { ChakraProvider } from "@chakra-ui/react";
+
+const clerkFrontendApi = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
+
+function ClerkAirtableStarter({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  return (
+    <ClerkProvider
+      frontendApi={clerkFrontendApi}
+      navigate={(to) => router.push(to)}
+    >
+      <ChakraProvider theme={defaultTheme}>
+        <MainLayout>
+          <Component {...pageProps} />
+        </MainLayout>
+      </ChakraProvider>
+    </ClerkProvider>
+  );
 }
-export default MyApp
+
+export default ClerkAirtableStarter;

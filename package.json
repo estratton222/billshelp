@@ -1,5 +1,5 @@
 {
-  "name": "clerk-airtable-starter",
+  "name": "clerk-airtable-apartment-hunt",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.6.4",
+    "@clerk/clerk-react": "^1.14.0",
+    "@clerk/clerk-sdk-node": "^0.5.0",
+    "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@fontsource/open-sans": "^4.5.0",
+    "@fontsource/raleway": "^4.5.0",
+    "airtable": "^0.11.1",
+    "framer-motion": "^4.1.17",
     "next": "11.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2"
