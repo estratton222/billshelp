@@ -11,7 +11,9 @@ export function ApartmentCard({
   apartment,
   onVisitedChange,
 }: ApartmentCardProps) {
-  const [isVisited, setIsVisited] = useState(apartment.fields["Visited?"]);
+  const [isVisited, setIsVisited] = useState(
+    apartment.fields["Visited?"] || false
+  );
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleVisitedChange = async function () {
@@ -84,11 +86,9 @@ export function ApartmentCard({
         >
           Visited
         </Checkbox>
-        {apartment.fields["Email"] && (
-          <Text>
-            <i>Visited by {apartment.fields["Email"]}</i>
-          </Text>
-        )}
+        <Text>
+          <i>Assigned to {apartment.fields["Email"]}</i>
+        </Text>
       </Box>
     </Flex>
   );

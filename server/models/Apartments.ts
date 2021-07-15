@@ -5,8 +5,14 @@ const TABLE_NAME = "Apartments";
 
 const apartmentsTable = airtableBase.table(TABLE_NAME);
 
-export async function getApartments() {
-  return await apartmentsTable.select().firstPage();
+export async function getApartmentsByEmail(emailAddress: string) {
+  return await apartmentsTable
+    .select({ filterByFormula: `Email = '${emailAddress}'` })
+    .firstPage();
+}
+
+export async function getApartmentById(apartmentId: string) {
+  return await apartmentsTable.find(apartmentId);
 }
 
 export async function updateApartment(apartment: ApartmentRecord) {

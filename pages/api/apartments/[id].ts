@@ -1,35 +1,38 @@
-import { withSession, WithSessionProp, Clerk } from "@clerk/clerk-sdk-node";
-import { updateApartment } from "../../../server/models";
+import { requireSession, WithSessionProp } from "@clerk/clerk-sdk-node";
+import { getApartmentById, updateApartment } from "../../../server/models";
+import { ClerkInstance } from "../../../server/auth";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-const clerkApiInstance = new Clerk({ apiKey: process.env.CLERK_API_KEY });
+import { ApartmentRecord } from "../../../types";
 
 async function handler(
   req: WithSessionProp<NextApiRequest>,
   res: NextApiResponse
 ) {
-  if (req.session && req.session.userId) {
-    switch (req.method) {
-      case "PUT":
-        const apartment = req.body;
-        const user = await clerkApiInstance.users.getUser(req.session.userId);
-        const primaryEmailAddress = user.emailAddresses.find(
-          (emailAddress) => emailAddress.id === user.primaryEmailAddressId
-        )?.emailAddress;
+  switch (req.method) {
+    case "PUT":
+      const apartment = req.body as ApartmentRecord;
+      const userId = req.session?.userId as string;
+      /** We make sure prevent a user with different account to update the visitation status. */
+      const user = await ClerkInstance.users.getUser(userId);
+      const primaryEmailAddress = user.emailAddresses.find(
+        (emailAddress) => emailAddress.id === user.primaryEmailAddressId
+      )?.emailAddress;
 
-        const results = await updateApartment({
-          id: apartment.id,
-          fields: { Email: primaryEmailAddress, ...apartment.fields },
-        });
-        res.status(200).json(results);
+      /** We check if the persisted apartment email matches the requesters. */
+      const persistedApartment = await getApartmentById(apartment.id);
+
+      if (primaryEmailAddress !== persistedApartment.fields.Email) {
+        res.status(401).end();
         break;
-      default:
-        res.status(405).end();
-        break;
-    }
-  } else {
-    res.status(401).end();
+      }
+
+      const results = await updateApartment(apartment);
+      res.status(200).json(results);
+      break;
+    default:
+      res.status(405).end();
+      break;
   }
 }
 
-export default withSession(handler);
+export default requireSession(handler);

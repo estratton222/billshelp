@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import type { ApartmentRecord } from "../../types";
 
 export function useApartments() {
+  const [areApartmentsLoading, setAreApartmentsLoading] = useState(false);
   const [apartments, setApartments] = useState<ApartmentRecord[]>([]);
   const [apartmentsRetrievalError, setApartmentsRetrievalError] =
     useState(null);
 
   useEffect(() => {
     const retrieveApartments = async function () {
+      setAreApartmentsLoading(true);
       try {
         const apartments = (await (
           await fetch(`/api/apartments`)
@@ -15,6 +17,8 @@ export function useApartments() {
         setApartments(apartments);
       } catch (err) {
         setApartmentsRetrievalError(err);
+      } finally {
+        setAreApartmentsLoading(false);
       }
     };
 
@@ -23,10 +27,6 @@ export function useApartments() {
 
   const updateApartment = async function (apartment: Partial<ApartmentRecord>) {
     try {
-      /** If the apartment visited state will be false, remove the visitor email also. */
-      if (apartment.fields?.["Visited?"] === false) {
-        apartment.fields.Email = "";
-      }
       const response = await fetch(`/api/apartments/${apartment.id}`, {
         method: "PUT",
         body: JSON.stringify(apartment),
@@ -55,6 +55,7 @@ export function useApartments() {
   return {
     apartments,
     apartmentsRetrievalError,
+    areApartmentsLoading,
     updateApartment,
   };
 }

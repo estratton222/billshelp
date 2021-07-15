@@ -1,18 +1,27 @@
-import { withSession, WithSessionProp } from "@clerk/clerk-sdk-node";
-import { getApartments } from "../../../server/models";
+import { requireSession, WithSessionProp } from "@clerk/clerk-sdk-node";
+import { getApartmentsByEmail } from "../../../server/models";
+import { ClerkInstance } from "../../../server/auth";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(
   req: WithSessionProp<NextApiRequest>,
   res: NextApiResponse
 ) {
-  /** Allow only logged in users to view the apartments. */
-  if (req.session) {
-    const apartments = await getApartments();
-    res.status(200).json(apartments);
-  } else {
-    res.status(401).end();
+  switch (req.method) {
+    case "GET":
+      const userId = req.session?.userId as string;
+      const user = await ClerkInstance.users.getUser(userId);
+      const primaryEmailAddress =
+        user.emailAddresses.find(
+          (emailAddress) => emailAddress.id === user.primaryEmailAddressId
+        )?.emailAddress || "";
+
+      const apartments = await getApartmentsByEmail(primaryEmailAddress);
+      res.status(200).json(apartments);
+      break;
+    default:
+      res.status(405).end();
   }
 }
 
-export default withSession(handler);
+export default requireSession(handler);
