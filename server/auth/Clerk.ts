@@ -1,4 +1,4 @@
-import { Clerk } from "@clerk/clerk-sdk-node";
+import { Clerk } from "@clerk/nextjs/api";
 
 if (typeof process.env.CLERK_API_KEY === "undefined") {
   throw "You forgot to set CLERK_API_KEY correctly as an environment variable!";

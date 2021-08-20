@@ -1,4 +1,4 @@
-import { requireSession, WithSessionProp } from "@clerk/clerk-sdk-node";
+import { requireSession, WithSessionProp } from "@clerk/nextjs/api";
 import { getApartmentsByEmail } from "../../../server/models";
 import { ClerkInstance } from "../../../server/auth";
 import type { NextApiRequest, NextApiResponse } from "next";

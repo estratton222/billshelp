@@ -1,5 +1,5 @@
 import { Flex, Box, Heading, Button } from "@chakra-ui/react";
-import { SignedIn, SignedOut, useClerk } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 
 type MainProps = {
   children: JSX.Element;
