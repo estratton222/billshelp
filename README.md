@@ -6,6 +6,14 @@ This repo shows an example use case for how you setup Airtable with [Clerk](http
 
 [![Open in VS Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/clerkinc/clerk-airtable-apartment-hunt)
 
+---
+
+**Clerk is Hiring!**
+
+Would you like to work on Open Source software and help maintain this repository? Apply today https://apply.workable.com/clerk-dev/.
+
+---
+
 ## Apartment Hunt App
 
 The **Apartment Hunt App** allows authenticated access and visit status modification to apartments that have been assigned to specific users (_by email_) in the Airtable apartments database.
